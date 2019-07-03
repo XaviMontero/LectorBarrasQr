@@ -31,13 +31,24 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
     String API_BASE_URL="http://172.16.35.97:8080/prueba/api/v1.0/producto/";
     ListView list;
     Productos p = null;
+    EditText txt_codigo,text_nombre,text_decripcion,text_precio_unitario,txt_stok,ubic,precio_mayorista;
+
 
     ArrayList<String> titles = new ArrayList<>();
+    private void referece() {
+        txt_codigo=findViewById(R.id.txt_codigo);
+        text_nombre= findViewById(R.id.text_nombre);
+        text_decripcion=findViewById(R.id.text_decripcion);
+        text_precio_unitario=findViewById(R.id.text_precio_unitario);
+        txt_stok=findViewById(R.id.txt_stok);
+        ubic=findViewById(R.id.ubic);
+        precio_mayorista=findViewById(R.id.precio_mayorista);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        referece();
         setContentView(R.layout.activity_scanner);
         scannear = findViewById(R.id.btn_scannear);
         descripcion = findViewById(R.id.text_decripcion);
@@ -52,6 +63,20 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
                 newString= extras.getString("COD_BARRA");
                 MDToast mdToast = MDToast.makeText(this, newString ,  1000, 1);
                 mdToast.show();
+                getPosts();
+                if(p!=null){
+                    txt_codigo.setText(p.getId());
+                    text_nombre.setText(p.getProNombre());
+                    text_decripcion.setText(p.getProUbi());
+                    text_precio_unitario.setText(String.valueOf(p.getProPreVen()));
+                    txt_stok.setText(String.valueOf(p.getProSto()));
+                    ubic.setText(String.valueOf(p.getProObs()));
+                    precio_mayorista.setText(String.valueOf(p.getProPreMay()));
+                }else {
+                    MDToast mdToasts = MDToast.makeText(this, "No existe producto" ,  1000, 1);
+                    mdToasts.show();
+                }
+                newString= null;
 
             }
         } else {
@@ -59,12 +84,25 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
             MDToast mdToast = MDToast.makeText(this, newString ,  1000, 1);
             mdToast.show();
             getPosts();
-            
+            if(p!=null){
+                txt_codigo.setText(p.getId());
+                text_nombre.setText(p.getProNombre());
+                text_decripcion.setText(p.getProUbi());
+                text_precio_unitario.setText(String.valueOf(p.getProPreVen()));
+                txt_stok.setText(String.valueOf(p.getProSto()));
+                ubic.setText(String.valueOf(p.getProObs()));
+                precio_mayorista.setText(String.valueOf(p.getProPreMay()));
+            }else {
+                MDToast mdToasts = MDToast.makeText(this, "No existe producto" ,  1000, 1);
+                mdToasts.show();
+            }
             newString= null;
         }
 
 
     }
+
+
 
     @Override
     public void onResume() {
@@ -113,6 +151,8 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
                 .build();
         PostService postService = retrofit.create(PostService.class);
         Call<List<Productos>> call = postService.getPost("011");
+            String ruta = postService.toString();
+
 
         call.enqueue(new Callback<List<Productos>>() {
             @Override
