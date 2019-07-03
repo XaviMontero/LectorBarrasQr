@@ -15,8 +15,8 @@
 
         <ImageView
             android:id="@+id/image_producto"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
 
             android:layout_marginBottom="16dp"
@@ -125,6 +125,21 @@
                 android:hint="Ubicacion"
                 android:drawableStart="@drawable/ic_money"
                 android:id="@+id/ubic"
+                />
+
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:counterEnabled="true"
+            app:counterMaxLength="30">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Precio de mayorista"
+                android:drawableStart="@drawable/ic_money"
+                android:id="@+id/precio_mayorista"
                 />
 
         </android.support.design.widget.TextInputLayout>
