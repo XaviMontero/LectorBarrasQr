@@ -7,17 +7,32 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Toast;
 
+import com.example.lectorbarrasqr.model.PostService;
+import com.example.lectorbarrasqr.model.Productos;
 import com.google.zxing.Result;
 import com.valdesekamdem.library.mdtoast.MDToast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ScannerActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler, View.OnClickListener {
     ZXingScannerView mScannerView;
     Button scannear;
     EditText codigoBarras;
     EditText descripcion;
+
+    ListView list;
+    ArrayList<String> titles = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +69,36 @@ public class ScannerActivity extends AppCompatActivity implements ZXingScannerVi
         //If you would like to resume scanning, call this method below:
         mScannerView.resumeCameraPreview(this);
         startActivity(new Intent(this,ScannerActivity.class));
-        this.finish();    }
+        this.finish();
+
+
+
+
+    }
+
+    private void getPosts() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://localhost:8080/prueba/api/v1.0/producto/011/busca")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        PostService postService = retrofit.create(PostService.class);
+        Call<List<Productos>> call = postService.getPost();
+
+        call.enqueue(new Callback<List<Productos>>() {
+            @Override
+            public void onResponse(Call<List<Productos>> call, Response<List<Productos>> response) {
+                for(Productos post : response.body()) {
+                    titles.add(post.getId());
+                    MDToast mdToast = MDToast.makeText(getApplicationContext(), post.getProNombre() ,  1000, 1);
+                    mdToast.show();
+                }
+             }
+
+            @Override
+            public void onFailure(Call<List<Productos>> call, Throwable t) {
+            }
+        });
+    }
 
     @Override
     public void onClick(View v) {
