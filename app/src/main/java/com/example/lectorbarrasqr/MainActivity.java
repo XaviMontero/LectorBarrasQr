@@ -41,11 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText user;
     private EditText password;
     private Button sumit;
-    String API_BASE_URL="http://172.16.35.97:8080/prueba/api/v1.0/producto/011/busca/";
-    ListView list;
-    Productos p = null;
 
-    ArrayList<String> titles = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         sumit.setOnClickListener(this);
 
         if(Utility.checkAndRequestPermissions(this)){
-            getPosts();
+
         }else {
             Utility.showDialogOK(this,"Acede alos permisos");
         }
@@ -107,30 +103,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
     }
-    private void getPosts() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(API_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        PostService postService = retrofit.create(PostService.class);
-        Call<List<Productos>> call = postService.getPost();
 
-        call.enqueue(new Callback<List<Productos>>() {
-            @Override
-            public void onResponse(Call<List<Productos>> call, Response<List<Productos>> response) {
-                for(Productos post : response.body()) {
-                    titles.add(post.getId());
-                   p=post;
-
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Productos>> call, Throwable t) {
-            }
-        });
-
-    }
 
 }
